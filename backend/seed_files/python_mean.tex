@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage{listings}
+\begin{document}
+\section*{Задача: функция среднего арифметического}
+
+Условие: написать функцию \texttt{mean(values)}, которая возвращает среднее
+арифметическое списка чисел. Если список пустой, функция должна возвращать
+\texttt{None}.
+
+\begin{lstlisting}[language=Python]
+def mean(values: list[float]) -> float | None:
+    if not values:
+        return None
+    return sum(values) / len(values)
+
+
+# Тесты
+assert mean([1, 2, 3, 4, 5]) == 3.0
+assert mean([10]) == 10.0
+assert mean([]) is None
+print("OK")
+\end{lstlisting}
+
+\textbf{Идея:} проверяю пустоту, возвращаю None. Иначе делю сумму на длину.
+\end{document}

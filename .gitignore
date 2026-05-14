@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Backend storage and DB
+backend/storage/*
+!backend/storage/.gitkeep
+backend/grading_workdir/*
+!backend/grading_workdir/.gitkeep
+backend/autograde.db
+backend/autograde.db-journal
+backend/.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp

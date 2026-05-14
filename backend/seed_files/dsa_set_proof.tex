@@ -1,0 +1,28 @@
+\documentclass{article}
+\begin{document}
+\section*{Доказать: $A \cup (B \cap C) = (A \cup B) \cap (A \cup C)$}
+
+Пусть $x$ — произвольный элемент.
+
+\textbf{Прямое включение ($\subseteq$).}
+Если $x \in A \cup (B \cap C)$, то либо $x \in A$, либо $x \in B \cap C$.
+
+\begin{itemize}
+\item Если $x \in A$, то $x \in A \cup B$ и $x \in A \cup C$, значит
+$x \in (A \cup B) \cap (A \cup C)$.
+\item Если $x \in B \cap C$, то $x \in B$ и $x \in C$, поэтому $x \in A \cup B$
+и $x \in A \cup C$, значит $x \in (A \cup B) \cap (A \cup C)$.
+\end{itemize}
+
+\textbf{Обратное включение ($\supseteq$).}
+Если $x \in (A \cup B) \cap (A \cup C)$, то $x \in A \cup B$ и $x \in A \cup C$.
+\begin{itemize}
+\item Если $x \in A$, то $x \in A \cup (B \cap C)$.
+\item Если $x \notin A$, то из $x \in A \cup B$ следует $x \in B$, а из
+$x \in A \cup C$ — $x \in C$. Значит $x \in B \cap C$, а значит
+$x \in A \cup (B \cap C)$.
+\end{itemize}
+
+Включения в обе стороны установлены, $\Rightarrow A \cup (B \cap C) =
+(A \cup B) \cap (A \cup C)$. $\square$
+\end{document}
