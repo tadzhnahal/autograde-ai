@@ -17,6 +17,15 @@ interface ChatPageProps {
   onGroupChange: (groupId: string) => void
 }
 
+type ChatMessage = {
+  id: string
+  text: string
+  from_user_id: string
+  to_user_id: string
+  from_me: boolean
+  created_at: string
+}
+
 export function ChatPage({ role, selectedGroupId, onGroupChange }: ChatPageProps) {
   const [selectedThread, setSelectedThread] = useState<string | null>(null)
 
@@ -203,6 +212,7 @@ function ChatThread({
   const me = useAuth((s) => s.user)
   const [text, setText] = useState('')
   const scrollRef = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient()
 
   const { data: messages } = useQuery({
     queryKey: ['chat-messages', groupId, withUserId],
@@ -217,8 +227,18 @@ function ChatThread({
   const mut = useMutation({
     mutationFn: (txt: string) =>
       chatApi.send(groupId, txt, role === 'teacher' ? withUserId : undefined),
-    onSuccess: () => {
+    onSuccess: (createdMessage: ChatMessage) => {
       setText('')
+
+      queryClient.setQueryData<ChatMessage[]>(
+          ['chat-messages', groupId, withUserId],
+          (prev) => [...(prev ?? []), createdMessage],
+      )
+
+      queryClient.invalidateQueries({
+          queryKey: ['chat-messages', groupId, withUserId],
+      })
+
       onSent()
     },
   })
