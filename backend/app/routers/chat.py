@@ -7,6 +7,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
+from datetime import datetime, timezone
 
 from app.db import get_db
 from app.deps import get_current_user
@@ -36,6 +37,37 @@ def _ensure_member(db: Session, group: Group, user: User) -> None:
     )
     if enrolled is None:
         raise HTTPException(403, "You are not in this group")
+
+
+def to_sortable_datetime(value: object) -> datetime:
+    fallback = datetime.min.replace(tzinfo=timezone.utc)
+
+    if value is None:
+        return fallback
+
+    if isinstance(value, datetime):
+        if value.tzinfo is None:
+            return value.replace(tzinfo=timezone.utc)
+        return value
+
+    if isinstance(value, str):
+        raw_value = value.strip()
+        if not raw_value:
+            return fallback
+
+        normalized_value = raw_value.replace("Z", "+00:00")
+
+        try:
+            parsed_value = datetime.fromisoformat(normalized_value)
+        except ValueError:
+            return fallback
+
+        if parsed_value.tzinfo is None:
+            return parsed_value.replace(tzinfo=timezone.utc)
+
+        return parsed_value
+
+    return fallback
 
 
 @router.get("/groups")
@@ -89,13 +121,14 @@ def list_chat_groups(
                 ),
             }
         )
+
     result.sort(
-        key=lambda r: (
+        key=lambda r: to_sortable_datetime(
             r["last_message"]["created_at"] if r["last_message"] else None
-        )
-        or "",
+        ),
         reverse=True,
     )
+
     return result
 
 
